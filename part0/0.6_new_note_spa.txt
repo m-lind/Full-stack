@@ -1,0 +1,8 @@
+note over browser
+event handler provides the note list 
+with the new note on display and sends 
+the new note to server
+end note
+
+browser->server: https://studies.cs.helsinki.fi/exampleapp/new_note_spa 
+server-->browser: created {content: "testing spa", date: "2021-05-07T14:34:02.394Z"}

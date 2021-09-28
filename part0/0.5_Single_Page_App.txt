@@ -1,0 +1,15 @@
+browser->server: https://studies.cs.helsinki.fi/exampleapp/spa
+server-->browser: HTML-code
+browser->server: https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser: main.css
+
+note over browser
+browser executes js-code that makes a request for json data from server
+end note 
+
+browser->server: https://studies.cs.helsinki.fi/exampleapp/spa.js
+server-->browser: [...,{"content":"spa practice","date":"2021-05-05T14:26:25.190Z"}]
+
+note over browser
+event handler uses DOM-API to provide notes on display
+end note
