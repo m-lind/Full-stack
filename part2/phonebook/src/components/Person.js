@@ -6,4 +6,4 @@ const Person = ({ person }) => {
     )
 }
 
-export default Person
+export default Person;
