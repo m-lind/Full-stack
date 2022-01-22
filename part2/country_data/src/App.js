@@ -7,6 +7,10 @@ const App = () => {
   const [countries, setCountries] = useState([])
   const [showData, setShowData] = useState([])
 
+  const handleClick = (country) => {
+    setShowData(country.name.common.toLowerCase())
+  }
+
   const handleFilterChange = (event) => setShowData(event.target.value.toLowerCase())
 
   const dataToShow = showData.length > 0
@@ -30,7 +34,7 @@ const App = () => {
         onChange={handleFilterChange} 
       />
       <div>
-        <FilterResults dataToShow={dataToShow}/>
+        <FilterResults dataToShow={dataToShow} handleClick={handleClick}/>
       </div> 
     </div>
   );

@@ -1,7 +1,7 @@
 import CountryData from './CountryData'
 
-const FilterResults = ({ dataToShow }) => {
-    
+const FilterResults = ({ dataToShow, handleClick }) => {
+
     if (dataToShow.length > 10) {
       
       return (
@@ -21,7 +21,12 @@ const FilterResults = ({ dataToShow }) => {
     return (
       <div>
         {dataToShow.map(country => 
-            <div key={country.name.common}>{country.name.common}</div>
+            <div key={country.name.common}>
+              <div>
+                {country.name.common}
+                <button onClick={() => handleClick(country)}>show</button>
+              </div>              
+            </div>
         )}
       </div>
     )
