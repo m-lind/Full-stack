@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import axios from 'axios'
+import personService from './services/persons'
 
 const App = () => {
   const [ persons, setPersons ] = useState([]) 
@@ -10,6 +11,16 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ showPersons, setShowPersons] = useState('')
+
+  const handleClick = (person) => {
+    if(window.confirm(`Delete ${person.name}?`)) {
+      personService
+        .remove(person.id)
+        .then(
+          setPersons(persons.filter(p => p.id !== person.id))
+        )
+    } 
+  }
 
   const hook = () => {
     axios
@@ -28,14 +39,35 @@ const App = () => {
       number: newNumber
     }
 
-    if (persons.find(person => person.name === newName)) {
-        alert(`${newName} is already added to phonebook`)
-        setNewName('')
-        setNewNumber('')
-    } else {
-      setPersons(persons.concat(personObject))
+    const person = persons.find(singlePerson => singlePerson.name === newName)
+
+    if (person) {      
+      const changeNumber = { ...person, number: newNumber }
+      
+      if (window.confirm((`${newName} is already added to phonebook, replace the old number with a new one?`))) {
+        personService
+          .update(person.id, changeNumber)
+          .then(returnedPerson => {
+            setPersons(persons.map(per => per.id !== person.id ? per : returnedPerson))
+          })
+          .catch(error => {
+            alert(
+              `the person ${person.name} was already deleted from server`
+            )
+            setPersons(persons.filter(p => p.id !== person.id))
+          })        
+      }
       setNewName('')
       setNewNumber('')
+
+    } else {
+      personService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      })      
     }
   }
 
@@ -60,7 +92,7 @@ const App = () => {
         handlePhoneNumberChange = {handlePhoneNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons personsToShow = {personsToShow}/>
+      <Persons personsToShow = {personsToShow} handleClick={handleClick}/>
     </div>
   )
 }
