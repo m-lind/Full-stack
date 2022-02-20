@@ -5,14 +5,16 @@ import Persons from './components/Persons'
 import axios from 'axios'
 import personService from './services/persons'
 import Notification from './components/Notification'
+import ErrorNotification from './components/ErrorNotification'
 
 const App = () => {
   const [ persons, setPersons ] = useState([]) 
 
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
-  const [ showPersons, setShowPersons] = useState('')
-  const [ notificationMessage, setNotificationMessage ] = useState(null)
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [showPersons, setShowPersons] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const handleClick = (person) => {
     if(window.confirm(`Delete ${person.name}?`)) {
@@ -61,10 +63,11 @@ const App = () => {
             }, 4000)
           })
           .catch(error => {
-            alert(
-              `the person ${person.name} was already deleted from server`
-            )
             setPersons(persons.filter(p => p.id !== person.id))
+            setErrorMessage(`Information of ${person.name} has already been removed from server`)
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 4000)
           })        
       }
       setNewName('')
@@ -96,6 +99,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <ErrorNotification message={errorMessage} />
       <Notification message={notificationMessage} />
       <Filter handleFilterChange = {handleFilterChange}/>
       <h2>add a new</h2>
