@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
@@ -8,8 +8,7 @@ import Notification from './components/Notification'
 import ErrorNotification from './components/ErrorNotification'
 
 const App = () => {
-  const [ persons, setPersons ] = useState([]) 
-
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [showPersons, setShowPersons] = useState('')
@@ -44,13 +43,13 @@ const App = () => {
     event.preventDefault()
     const personObject = {
       name: newName,
-      number: newNumber
+      phonenumber: newNumber
     }
 
     const person = persons.find(singlePerson => singlePerson.name === newName)
 
     if (person) {      
-      const changeNumber = { ...person, number: newNumber }
+      const changeNumber = { ...person, phonenumber: newNumber }
       
       if (window.confirm((`${newName} is already added to phonebook, replace the old number with a new one?`))) {
         personService
@@ -63,10 +62,9 @@ const App = () => {
             }, 4000)
           })
           .catch(error => {
-            setPersons(persons.filter(p => p.id !== person.id))
-            setErrorMessage(`Information of ${person.name} has already been removed from server`)
+            setErrorMessage(error.response.data.error)
             setTimeout(() => {
-              setNotificationMessage(null)
+              setErrorMessage(null)
             }, 4000)
           })        
       }
@@ -85,6 +83,14 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })      
+      .catch(error => {
+        setErrorMessage(error.response.data.error)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 4000)
+      })
+      setNewName('')
+      setNewNumber('')     
     }
   }
 
